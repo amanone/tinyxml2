@@ -162,7 +162,10 @@ template <class T, int INIT>
 class DynArray
 {
 public:
-	DynArray< T, INIT >() 
+	DynArray< T, INIT >() :
+	mem(),
+	allocated( 0 ),
+	size( 0 )
 	{
 		mem = pool;
 		allocated = INIT;
@@ -247,7 +250,7 @@ template< int SIZE >
 class MemPoolT : public MemPool
 {
 public:
-	MemPoolT() : root(0), currentAllocs(0), nAllocs(0), maxAllocs(0)	{}
+	MemPoolT() : blockPtrs(), root(0), currentAllocs(0), nAllocs(0), maxAllocs(0)	{}
 	~MemPoolT() {
 		// Delete the blocks.
 		for( int i=0; i<blockPtrs.Size(); ++i ) {

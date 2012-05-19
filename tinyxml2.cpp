@@ -464,8 +464,10 @@ bool XMLDocument::Accept( XMLVisitor* visitor ) const
 XMLNode::XMLNode( XMLDocument* doc ) :
 	document( doc ),
 	parent( 0 ),
+	value(),
 	firstChild( 0 ), lastChild( 0 ),
-	prev( 0 ), next( 0 )
+	prev( 0 ), next( 0 ),
+	memPool()
 {
 }
 
@@ -1275,7 +1277,11 @@ XMLDocument::XMLDocument( bool _processEntities ) :
 	errorID( 0 ),
 	errorStr1( 0 ),
 	errorStr2( 0 ),
-	charBuffer( 0 )
+	charBuffer( 0 ),
+	elementPool(),
+	attributePool(),
+	textPool(),
+	commentPool()
 {
 	document = this;	// avoid warning about 'this' in initializer list
 }
@@ -1507,7 +1513,9 @@ XMLPrinter::XMLPrinter( FILE* file ) :
 	fp( file ), 
 	depth( 0 ), 
 	textDepth( -1 ),
-	processEntities( true )
+	processEntities( true ),
+	stack(),
+	buffer(), accumulator()
 {
 	for( int i=0; i<ENTITY_RANGE; ++i ) {
 		entityFlag[i] = false;
